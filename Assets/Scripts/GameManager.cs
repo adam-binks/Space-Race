@@ -8,20 +8,14 @@ public class GameManager : Photon.MonoBehaviour {
 
 	public int numPolicySlots = 5;
 	public int numOperativeSlots = 6;
-	public SpriteRenderer spriteRenderer;
+	public GameObject cardPrefab;
 
 	private int localPlayerNum;
 	private int currentTurn;
 	private CardSlot[] policySlots;
 	private CardSlot[] myOperativeSlots;
 	private CardSlot[] enemyOperativeSlots;
-	private TextRender textRender;
 
-
-	void Start() {
-		textRender = GetComponent<TextRender>();
-		spriteRenderer.sprite = GenerateTextSprite("Test", textStyle.Title);
-	}
 
 	void OnJoinedRoom () {
 		localPlayerNum = PhotonNetwork.isMasterClient ? 1 : 2;
@@ -29,6 +23,8 @@ public class GameManager : Photon.MonoBehaviour {
 			photonView.RPC("setCurrentTurn", PhotonTargets.All, localPlayerNum); // temp: master always starts
 		}
 		setupSlots();
+
+		createCardGO("Science Funding");
 	}
 
 	// just for initial turn setup - future stuff should be handled by actions
@@ -51,10 +47,11 @@ public class GameManager : Photon.MonoBehaviour {
 	int getOtherPlayer(int p) {
 		return (p == 1) ? 2 : 1;
 	}
-
-	/// Wrap the TextRender function to make it more easily accessible
-	public Sprite GenerateTextSprite(string text, textStyle style) {
-		textRender.GenerateTextSprite(text, style);
-		return null;
+	
+	public Card createCardGO(string cardName) {
+		GameObject GO = Instantiate(cardPrefab);
+		Card c = GO.GetComponent<Card>();
+		c.setup(cardName);
+		return c;
 	}
 }

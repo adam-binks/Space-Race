@@ -1,21 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Card : MonoBehaviour {
 
-	public static GameObject cardPrefab;
+	public Text titleText;
+	public Text descriptionText;
 
 	private CardTemplate template;
 	private bool isCharged = false;
-
-
-	public static Card createCardGO(string cardName) {
-		GameObject GO = Instantiate(cardPrefab);
-		Card c = GO.GetComponent<Card>();
-		c.setup(cardName);
-		return c;
-	}
 
 
 	public void setup(string cardName) {
@@ -25,6 +19,10 @@ public class Card : MonoBehaviour {
 		} else {
 			Debug.LogError("Invalid cardName");
 		}
+
+		// setup visuals
+		titleText.text = template.cardName;
+		descriptionText.text = template.description;
 	}
 
 	public cardCategory getCategory() {
