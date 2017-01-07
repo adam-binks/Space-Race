@@ -8,7 +8,13 @@ public class GameManager : Photon.MonoBehaviour {
 
 	public int numPolicySlots = 5;
 	public int numOperativeSlots = 6;
+	public float policySlotSpacing = 2;
+	public float operativeSlotSpacing = 1.5f;
 	public GameObject cardPrefab;
+	public GameObject cardSlotPrefab;
+	public Transform policySlotsParent;
+	public Transform myOperativeSlotsParent;
+	public Transform enemyOperativeSlotsParent;
 
 	private int localPlayerNum;
 	private int currentTurn;
@@ -35,9 +41,30 @@ public class GameManager : Photon.MonoBehaviour {
 
 	// Setup policy and operative slots in the play area
 	void setupSlots() {
+		// setup policy slots
 		policySlots = new CardSlot[numPolicySlots];
+		for (int i = 0; i < numPolicySlots; i++) {
+			GameObject GO = Instantiate(cardSlotPrefab, policySlotsParent);
+			GO.transform.localPosition = new Vector3(-numPolicySlots*0.5f*policySlotSpacing + i * policySlotSpacing, 0, 0);
+			policySlots[i] = GO.GetComponent<CardSlot>();
+			policySlots[i].setup(cardCategory.Policy, true);
+		}
+
+		// setup operative slots
 		myOperativeSlots = new CardSlot[numOperativeSlots];
 		enemyOperativeSlots = new CardSlot[numOperativeSlots];
+		for (int i = 0; i < numOperativeSlots; i++) {
+			// my slot
+			GameObject myGO = Instantiate(cardSlotPrefab, myOperativeSlotsParent);
+			myGO.transform.localPosition = new Vector3(-numOperativeSlots*0.5f*operativeSlotSpacing + i * operativeSlotSpacing, 0, 0);
+			myOperativeSlots[i] = myGO.GetComponent<CardSlot>();
+			myOperativeSlots[i].setup(cardCategory.Operative, true);
+			// enemy slot
+			GameObject enemyGO = Instantiate(cardSlotPrefab, enemyOperativeSlotsParent);
+			enemyGO.transform.localPosition = new Vector3(-numOperativeSlots*0.5f*operativeSlotSpacing + i * operativeSlotSpacing, 0, 0);
+			enemyOperativeSlots[i] = enemyGO.GetComponent<CardSlot>();
+			enemyOperativeSlots[i].setup(cardCategory.Operative, false);
+		}
 	}
 
 	void EndCurrentTurn() {
