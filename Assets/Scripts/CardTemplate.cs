@@ -28,6 +28,7 @@ public class CardTemplate {   // << not a monobehaviour!
 		this.cat = category;
 	}
 
+	// These methods may be overriden by card templates
 	public virtual bool OnRefillFunds(GameManager gm) {return true;}
 	public virtual bool OnTurnStart(GameManager gm) {return true;}
 	public virtual bool OnCardPlay(GameManager gm) {return true;}
@@ -40,14 +41,15 @@ public class CardTemplate {   // << not a monobehaviour!
 }
 
 
-public class DoubleDraw : CardTemplate {
-	public DoubleDraw() 
+public class ScienceFunding : CardTemplate {
+	public ScienceFunding() 
 	: base("Science Funding", "Players draw two cards at the start of each turn", 1, 2, cardCategory.Policy)
 	{
 	}
 
 	public override bool OnTurnStart(GameManager gm) {
 		// TODO: draw an extra card
+		// gm.addAction(new Action(actionType.drawCard));
 		return true;
 	}
 }

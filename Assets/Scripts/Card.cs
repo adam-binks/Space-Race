@@ -12,13 +12,8 @@ public class Card : MonoBehaviour {
 	private bool isCharged = false;
 
 
-	public void setup(string cardName) {
-		// TEMP - todo proper card ID stuff
-		if (cardName == "Science Funding") {
-			template = new DoubleDraw();
-		} else {
-			Debug.LogError("Invalid cardName");
-		}
+	public void setup(CardID ID) {
+		template = ID.getTemplate();
 
 		// setup visuals
 		titleText.text = template.cardName;

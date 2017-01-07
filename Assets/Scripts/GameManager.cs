@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [RequireComponent(typeof(PhotonView))]
 
 public class GameManager : Photon.MonoBehaviour {
@@ -15,22 +16,35 @@ public class GameManager : Photon.MonoBehaviour {
 	public Transform policySlotsParent;
 	public Transform myOperativeSlotsParent;
 	public Transform enemyOperativeSlotsParent;
+	public Deck localDeck;
 
 	private int localPlayerNum;
 	private int currentTurn;
 	private CardSlot[] policySlots;
 	private CardSlot[] myOperativeSlots;
 	private CardSlot[] enemyOperativeSlots;
+	private DeckDisplay deckDisplay;
 
+
+	void Start() {
+		deckDisplay = GetComponent<DeckDisplay>();
+	}
 
 	void OnJoinedRoom () {
 		localPlayerNum = PhotonNetwork.isMasterClient ? 1 : 2;
 		if (PhotonNetwork.isMasterClient) {
 			photonView.RPC("setCurrentTurn", PhotonTargets.All, localPlayerNum); // temp: master always starts
 		}
-		setupSlots();
 
-		createCardGO("Science Funding");
+		// temp: just make a deck here
+		localDeck = new Deck(new List<CardID>() {new CardID("ScienceFunding"),
+												 new CardID("ScienceFunding"),
+												 new CardID("ScienceFunding"),
+												 new CardID("ScienceFunding"),
+												 new CardID("ScienceFunding")});
+		
+		deckDisplay.UpdateRemaining(localDeck.getCount(), true);
+		setupSlots();
 	}
 
 	// just for initial turn setup - future stuff should be handled by actions
@@ -75,10 +89,10 @@ public class GameManager : Photon.MonoBehaviour {
 		return (p == 1) ? 2 : 1;
 	}
 	
-	public Card createCardGO(string cardName) {
+	public Card createCardGO(CardID ID) {
 		GameObject GO = Instantiate(cardPrefab);
 		Card c = GO.GetComponent<Card>();
-		c.setup(cardName);
+		c.setup(ID);
 		return c;
 	}
 }
