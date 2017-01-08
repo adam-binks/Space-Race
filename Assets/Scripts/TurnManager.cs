@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour {
 
-	private int currentTurn;
+	public int currentTurn;
+
 	private int turnCount = 0;
 	private GameManager gm;
 
@@ -23,6 +24,10 @@ public class TurnManager : MonoBehaviour {
 		DrawCards();
 	}
 
+	void RefillFunds() {
+
+	}
+
 	void DrawCards() {
 		if (IsMyTurn()) {
 			gm.DrawMyCard();
@@ -30,20 +35,24 @@ public class TurnManager : MonoBehaviour {
 			gm.DrawEnemyCard();
 		}
 	}
-
-	void RefillFunds() {
-
-	}
 	
-	// temp: will be called by action
+	/// Called by End Turn button click
+	public void CreateEndTurnAction() {
+		gm.actionQueue.AddAction(new EndTurnAction());
+	}
+
 	public void EndTurn() {
+		gm.actionQueue.EndTurn();
 		turnCount++;
 		currentTurn = gm.GetOtherPlayer(currentTurn);
+		StartTurn();
 	}
 
 	public bool IsMyTurn() {
 		return currentTurn == gm.localPlayerNum;
 	}
 
-
+	public int GetTurnNumber() {
+		return turnCount;
+	}
 }

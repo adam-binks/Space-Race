@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class CardSlot : MonoBehaviour {
+public class CardSlot : ActionActor {
 
 	public Sprite policySlotSprite;
 	public Sprite operativeSlotSprite;

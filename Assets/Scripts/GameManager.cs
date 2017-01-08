@@ -16,11 +16,11 @@ public class GameManager : Photon.MonoBehaviour {
 	public int localPlayerNum;
 	[HideInInspector]
 	public ActionQueue actionQueue;
+	public TurnManager turnManager;
 
 	private Deck localDeck;
 	private DeckDisplay deckDisplay;
 	private SlotManager slotManager;
-	private TurnManager turnManager;
 
 
 	void Start() {

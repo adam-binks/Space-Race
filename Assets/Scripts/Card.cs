@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class Card : MonoBehaviour {
+public class Card : ActionActor {
 
 	public Text titleText;
 	public Text descriptionText;
@@ -21,6 +21,8 @@ public class Card : MonoBehaviour {
 		// setup visuals
 		titleText.text = template.cardName;
 		descriptionText.text = template.description;
+
+		Debug.Log("ID: " + actorID);
 	}
 
 	public cardCategory GetCategory() {
