@@ -24,18 +24,18 @@ public class Deck {
 	}
 
 	/// Add a cardID to a random position in the deck
-	public void shuffleInCardID(CardID c) {
+	public void ShuffleInCardID(CardID c) {
 		int location = UnityEngine.Random.Range(0, deck.Count);
 		deck.Insert(location, c);
 	}
 
 	/// Not perfectly random but good enough for now
-	public void shuffle() {
+	public void Shuffle() {
 		deck = deck.OrderBy(a => Guid.NewGuid()).ToList();
 	}
 
 	/// Remove the top cardID from the deck and return it
-	public CardID drawCard() {
+	public CardID DrawCard() {
 		if (deck.Count == 0) {
 			Debug.Log("Deck is empty - can't draw card!");
 			return null;
@@ -45,7 +45,7 @@ public class Deck {
 		return ID;
 	}
 
-	public int getCount() {
+	public int GetCount() {
 		return deck.Count;
 	}
 }

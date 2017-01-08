@@ -19,7 +19,7 @@ public class CardID {
 		this.ID = ID;
 	}
 
-	public CardTemplate getTemplate() {
+	public CardTemplate GetTemplate() {
 		switch (ID) {
 			case "ScienceFunding":
 				return new ScienceFunding();
@@ -29,7 +29,7 @@ public class CardID {
 		}
 	}
 
-	public string getID() {
+	public string GetID() {
 		return this.ID;
 	}
 }

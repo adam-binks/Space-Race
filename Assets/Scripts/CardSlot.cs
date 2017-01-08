@@ -13,7 +13,7 @@ public class CardSlot : MonoBehaviour {
 	private cardCategory requiredCat = cardCategory.None;
 	private bool isMine;
 
-	public void setup(cardCategory requiredCardCategory, bool isMine) {
+	public void Setup(cardCategory requiredCardCategory, bool isMine) {
 		this.requiredCat = requiredCardCategory;
 
 		// setup slot sprite
@@ -32,23 +32,23 @@ public class CardSlot : MonoBehaviour {
 		}
 	}
 	
-	public bool isOccupied() {
+	public bool IsOccupied() {
 		return card == null;
 	}
 
-	public void addCard(Card c) {
-		if (isOccupied()) {
+	public void AddCard(Card c) {
+		if (IsOccupied()) {
 			Debug.LogError("Cannot add card to occupied card slot!");
 			return;
 		}
-		if (requiredCat != cardCategory.None && requiredCat != c.getCategory()) {
-			Debug.LogError("Cannot add card of type " + c.getCategory() + " to this card slot", this);
+		if (requiredCat != cardCategory.None && requiredCat != c.GetCategory()) {
+			Debug.LogError("Cannot add card of type " + c.GetCategory() + " to this card slot", this);
 			return;
 		}
 		card = c;
 	}
 
-	public Card removeCard() {
+	public Card RemoveCard() {
 		Card c = card;
 		card = null;
 		return c;
