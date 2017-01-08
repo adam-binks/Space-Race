@@ -12,24 +12,26 @@ public class GameManager : Photon.MonoBehaviour {
 	public GameObject cardPrefab;
 	public Hand localHand;
 	public Hand enemyHand;
+	[HideInInspector]
+	public int localPlayerNum;
+	[HideInInspector]
+	public ActionQueue actionQueue;
 
 	private Deck localDeck;
-	private int localPlayerNum;
-	private int currentTurn;
 	private DeckDisplay deckDisplay;
 	private SlotManager slotManager;
+	private TurnManager turnManager;
 
 
 	void Start() {
 		deckDisplay = GetComponent<DeckDisplay>();
 		slotManager = GetComponent<SlotManager>();
+		turnManager = GetComponent<TurnManager>();
+		actionQueue = GetComponent<ActionQueue>();
 	}
 
 	void OnJoinedRoom () {
 		localPlayerNum = PhotonNetwork.isMasterClient ? 1 : 2;
-		if (PhotonNetwork.isMasterClient) {
-			photonView.RPC("SetCurrentTurn", PhotonTargets.All, localPlayerNum); // temp: master always starts
-		}
 
 		// temp: just make a deck here
 		localDeck = new Deck(new List<CardID>() {new CardID("ScienceFunding"),
@@ -41,34 +43,10 @@ public class GameManager : Photon.MonoBehaviour {
 		deckDisplay.UpdateRemaining(localDeck.GetCount(), true);
 		slotManager.SetupSlots(numPolicySlots, numOperativeSlots);
 
-		StartTurn(); // temp: wait until other player has joined and is ready
+		turnManager.StartGame(); // temp: wait until other player has joined and is ready
 	}
 
-	// just for initial turn setup - future stuff should be handled by actions
-	[PunRPC]
-	void SetCurrentTurn(int playerNum) {
-		currentTurn = playerNum;
-	}
-
-	void StartTurn() {
-		if (IsMyTurn()) {
-			DrawMyCard();
-		} else {
-			DrawEnemyCard();
-		}
-	}
-
-	/// Temp: called by end turn button. TODO: call by an action (probably make private)
-	public void EndCurrentTurn() {
-		currentTurn = GetOtherPlayer(currentTurn);
-		StartTurn();
-	}
-
-	bool IsMyTurn() {
-		return currentTurn == localPlayerNum;
-	}
-
-	int GetOtherPlayer(int p) {
+	public int GetOtherPlayer(int p) {
 		return (p == 1) ? 2 : 1;
 	}
 	
@@ -79,7 +57,7 @@ public class GameManager : Photon.MonoBehaviour {
 		return c;
 	}
 
-	Card DrawMyCard() {
+	public Card DrawMyCard() {
 		Card c = deckDisplay.DrawCard(localDeck, this);
 
 		if (c == null) {
@@ -91,7 +69,7 @@ public class GameManager : Photon.MonoBehaviour {
 		return c;
 	}
 
-	ConcealedCard DrawEnemyCard() {
+	public ConcealedCard DrawEnemyCard() {
 		deckDisplay.DecrementEnemyRemaining();
 		ConcealedCard c = deckDisplay.DrawConcealedCard();
 		enemyHand.AddToHand(c);
