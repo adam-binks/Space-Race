@@ -71,4 +71,8 @@ public class Card : ActionActor {
 			transform.rotation = Quaternion.Euler(0, 180, 0);
 		}
 	}
+
+	void OnMouseEnterAndActive() {
+		Debug.Log("Enter and active");
+	}
 }
