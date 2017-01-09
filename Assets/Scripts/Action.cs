@@ -43,10 +43,11 @@ public class Action {
 	public ActionStatus status;
 
 
-	public Action(int actorID, int targetID, Act action) {
+	public Action(int actorID, int targetID, Act action, string parameter) {
 		this.actorID = actorID;
 		this.targetID = targetID;
 		this.actionID = (int)action;
+		this.parameter = parameter;
 	}
 
 	protected Action() {

@@ -31,12 +31,12 @@ public class ActionQueue : Photon.MonoBehaviour {
 	}
 
 	public void AddAction(Action a) {
-		photonView.RPC("AddActionRPC", PhotonTargets.All, a.actorID, a.targetID, a.actionID);
+		photonView.RPC("AddActionRPC", PhotonTargets.All, a.actorID, a.targetID, a.actionID, a.parameter);
 	}
 
 	[PunRPC]
-	void AddActionRPC(int actorID, int targetID, int actionID) {
-		Action a = new Action(actorID, targetID, (Act)actionID);
+	void AddActionRPC(int actorID, int targetID, int actionID, string parameter) {
+		Action a = new Action(actorID, targetID, (Act)actionID, parameter);
 
 		// a.printDetails()
 
