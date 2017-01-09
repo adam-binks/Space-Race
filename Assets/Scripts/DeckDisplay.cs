@@ -9,7 +9,6 @@ public class DeckDisplay : MonoBehaviour {
 	public Text enemyDeckRemaining;
 	public Transform myDeck;
 	public Transform enemyDeck;
-	public GameObject concealedCardPrefab;
 
 	private int enemyCardsRemaining = 30;
 
@@ -53,7 +52,9 @@ public class DeckDisplay : MonoBehaviour {
 	}
 
 	/// Draw a concealed card from the enemy deck
-	public ConcealedCard DrawConcealedCard() {
-		return Instantiate(concealedCardPrefab, enemyDeck.transform.position, Quaternion.identity).GetComponent<ConcealedCard>();
+	public Card DrawConcealedCard(GameManager gm) {
+		Card c = gm.CreateConcealedCardGO();
+		c.transform.position = enemyDeck.position;
+		return c;
 	}
 }

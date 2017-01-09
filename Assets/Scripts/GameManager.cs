@@ -57,6 +57,13 @@ public class GameManager : Photon.MonoBehaviour {
 		return c;
 	}
 
+	public Card CreateConcealedCardGO() {
+		GameObject GO = Instantiate(cardPrefab);
+		Card c = GO.GetComponent<Card>();
+		c.ConcealedSetup();
+		return c;
+	}
+
 	public Card DrawMyCard() {
 		Card c = deckDisplay.DrawCard(localDeck, this);
 
@@ -69,9 +76,9 @@ public class GameManager : Photon.MonoBehaviour {
 		return c;
 	}
 
-	public ConcealedCard DrawEnemyCard() {
+	public Card DrawEnemyCard() {
 		deckDisplay.DecrementEnemyRemaining();
-		ConcealedCard c = deckDisplay.DrawConcealedCard();
+		Card c = deckDisplay.DrawConcealedCard(this);
 		enemyHand.AddToHand(c);
 		return c;
 	}

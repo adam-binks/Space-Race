@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour {
 
+	[HideInInspector]
 	public int currentTurn;
 
 	private int turnCount = 0;

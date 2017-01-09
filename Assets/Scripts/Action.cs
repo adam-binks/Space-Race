@@ -10,7 +10,8 @@ public enum ActionStatus {
 }
 
 public enum Act {
-	EndTurn
+	EndTurn,
+	RevealCard
 }
 
 
@@ -34,10 +35,11 @@ public class Action {
 	}
 
 
-	// The three values that make up the action
+	// The four values that make up the action
 	public int actorID;
 	public int targetID;
 	public int actionID; // store as int
+	public string parameter; // parameter for any additional info. For example, reveal actions use this as cardID
 	public ActionStatus status;
 
 
@@ -65,7 +67,12 @@ public class Action {
 				gm.turnManager.EndTurn();
 				status = ActionStatus.Acted;
 				break;
-				
+			
+			case Act.RevealCard:
+				Card c = ActionActor.GetCardByID(actorID);
+				c.Reveal(new CardID(parameter));
+				break;
+
 			default:
 				Debug.LogError("Invalid actionID " + actionID);
 				break;
@@ -86,5 +93,14 @@ public class EndTurnAction : Action {
 		actorID = GetActorID("No actor");
 		targetID = GetActorID("No actor");
 		SetAction(Act.EndTurn);
+	}
+}
+
+public class RevealCardAction : Action {
+	public RevealCardAction(int actorID, string cardID) {
+		this.actorID = actorID; // card to be revealed
+		targetID = GetActorID("No actor");
+		parameter = cardID;
+		SetAction(Act.RevealCard);
 	}
 }

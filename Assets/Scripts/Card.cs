@@ -13,6 +13,8 @@ public class Card : ActionActor {
 
 	private CardTemplate template;
 	private bool isCharged = false;
+	/// Cards are concealed when the enemy draws them, this client shouldn't know what they are
+	private bool isConcealed;
 
 
 	public void Setup(CardID ID) {
@@ -22,7 +24,28 @@ public class Card : ActionActor {
 		titleText.text = template.cardName;
 		descriptionText.text = template.description;
 
-		Debug.Log("ID: " + actorID);
+		isConcealed = false;
+
+		//Debug.Log("ID: " + actorID);
+	}
+
+	/// When the enemy draws a card, this client shouldn't know what it is
+	public void ConcealedSetup() {
+		isConcealed = true;
+		FlipFaceDown(false);
+
+		titleText.text = "Concealed";
+		descriptionText.text = "Concealed";
+	}
+
+	/// Flip face up, and unconceal + setup card details if the card is currently conceal
+	public void Reveal(CardID ID) {
+		// if the card is already revealed, do nothing
+		// this is for the benefit of the player who drew the card
+		if (isConcealed) {
+			Setup(ID);
+			FlipFaceUp(true);
+		}
 	}
 
 	public cardCategory GetCategory() {
