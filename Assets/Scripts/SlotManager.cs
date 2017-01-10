@@ -24,7 +24,7 @@ public class SlotManager : MonoBehaviour {
 			GameObject GO = Instantiate(cardSlotPrefab, policySlotsParent);
 			GO.transform.localPosition = new Vector3(-numPolicySlots*0.5f*policySlotSpacing + i * policySlotSpacing, 0, 0);
 			policySlots[i] = GO.GetComponent<CardSlot>();
-			policySlots[i].Setup(CardCategory.Policy, true);
+			policySlots[i].Setup(cardCategory.Policy, true);
 		}
 
 		// setup operative slots
@@ -35,12 +35,12 @@ public class SlotManager : MonoBehaviour {
 			GameObject myGO = Instantiate(cardSlotPrefab, myOperativeSlotsParent);
 			myGO.transform.localPosition = new Vector3(-numOperativeSlots*0.5f*operativeSlotSpacing + i * operativeSlotSpacing, 0, 0);
 			myOperativeSlots[i] = myGO.GetComponent<CardSlot>();
-			myOperativeSlots[i].Setup(CardCategory.Operative, true);
+			myOperativeSlots[i].Setup(cardCategory.Operative, true);
 			// enemy slot
 			GameObject enemyGO = Instantiate(cardSlotPrefab, enemyOperativeSlotsParent);
 			enemyGO.transform.localPosition = new Vector3(-numOperativeSlots*0.5f*operativeSlotSpacing + i * operativeSlotSpacing, 0, 0);
 			enemyOperativeSlots[i] = enemyGO.GetComponent<CardSlot>();
-			enemyOperativeSlots[i].Setup(CardCategory.Operative, false);
+			enemyOperativeSlots[i].Setup(cardCategory.Operative, false);
 		}
 	}
 

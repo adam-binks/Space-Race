@@ -17,20 +17,10 @@ public class TurnManager : MonoBehaviour {
 	public void StartGame() {
 		currentTurn = 1; // temp: master client goes first always
 
-		MouseTargetable.SetActiveTargetingGroups(new List<TargetingGroup> {TargetingGroup.CardInMyHand});
-
 		StartTurn();
 	}
 
 	void StartTurn() {
-		if (IsMyTurn()) {
-			// on my turn, make cards in hand interactable
-			MouseTargetable.SetActiveTargetingGroups(new List<TargetingGroup> {TargetingGroup.CardInMyHand});
-		} else {
-			// make nothing interactable on the enemy's turn
-			MouseTargetable.SetActiveTargetingGroups(new List<TargetingGroup> {} ); 
-		}
-
 		RefillFunds();
 		DrawCards();
 	}
@@ -49,10 +39,7 @@ public class TurnManager : MonoBehaviour {
 	
 	/// Called by End Turn button click
 	public void CreateEndTurnAction() {
-		// end the turn for both players (as long as no card is being held)
-		if (MouseTargetable.heldCard == null) {
-			gm.actionQueue.AddAction(new EndTurnAction());
-		}
+		gm.actionQueue.AddAction(new EndTurnAction());
 	}
 
 	public void EndTurn() {
