@@ -72,7 +72,10 @@ public class Action {
 			case Act.RevealCard:
 				Card c = ActionActor.GetCardByID(actorID);
 				c.Reveal(new CardID(parameter));
+				status = ActionStatus.Acted;
 				break;
+
+			// don't forget status = ActionStatus.Acted!
 
 			default:
 				Debug.LogError("Invalid actionID " + actionID);

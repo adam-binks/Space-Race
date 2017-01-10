@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum cardCategory {
+public enum CardCategory {
 	Policy,
 	Operative,
 	None
@@ -14,13 +14,13 @@ public class CardTemplate {   // << not a monobehaviour!
 	public string description;
 	public int playCost;
 	public int chargeCost;
-	public cardCategory cat;
+	public CardCategory cat;
 
 	public CardTemplate(string cardName,
 						string description,
 						int playCost,
 						int chargeCost,
-						cardCategory category) {
+						CardCategory category) {
 		this.cardName = cardName;
 		this.description = description;
 		this.playCost = playCost;
@@ -43,7 +43,7 @@ public class CardTemplate {   // << not a monobehaviour!
 
 public class ScienceFunding : CardTemplate {
 	public ScienceFunding() 
-	: base("Science Funding", "Players draw two cards at the start of each turn", 1, 2, cardCategory.Policy)
+	: base("Science Funding", "Players draw two cards at the start of each turn", 1, 2, CardCategory.Policy)
 	{
 	}
 

@@ -13,7 +13,7 @@ public class Hand : MonoBehaviour {
 	// TODO max hand size?
 
 	/// tween the cards to their proper positions based on the number of cards in the hand
-	void CorrectCardPositions() {
+	public void CorrectCardPositions() {
 		// cancel any current rearranging tweens
 		DOTween.Kill("HandRearrange");
 

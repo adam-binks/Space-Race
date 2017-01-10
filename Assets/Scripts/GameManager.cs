@@ -28,6 +28,9 @@ public class GameManager : Photon.MonoBehaviour {
 		slotManager = GetComponent<SlotManager>();
 		turnManager = GetComponent<TurnManager>();
 		actionQueue = GetComponent<ActionQueue>();
+
+		// make nothing selectable till the match starts
+		MouseTargetable.SetActiveTargetingGroups(new List<TargetingGroup> {});
 	}
 
 	void OnJoinedRoom () {
