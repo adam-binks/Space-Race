@@ -21,6 +21,12 @@ public class TurnManager : MonoBehaviour {
 	}
 
 	void StartTurn() {
+		if (IsMyTurn()) {
+			MouseTargetable.SetActiveTargetingGroup(TargetingGroup.CardInMyHand); // make my cards in hand selectable on my turn
+		} else {
+			MouseTargetable.SetActiveTargetingGroups( new List<TargetingGroup> {} ); // make nothing selectable on enemy turn
+		}
+
 		RefillFunds();
 		DrawCards();
 	}

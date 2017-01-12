@@ -15,6 +15,7 @@ public class Card : ActionActor {
 	private bool isCharged = false;
 	/// Cards are concealed when the enemy draws them, this client shouldn't know what they are
 	private bool isConcealed;
+	private MouseTargetable mouseTargetable;
 
 
 	public void Setup(CardID ID) {
@@ -26,6 +27,9 @@ public class Card : ActionActor {
 
 		isConcealed = false;
 
+		mouseTargetable = GetComponent<MouseTargetable>();
+		mouseTargetable.SetTargetingGroup(TargetingGroup.CardInMyHand);
+
 		//Debug.Log("ID: " + actorID);
 	}
 
@@ -36,6 +40,9 @@ public class Card : ActionActor {
 
 		titleText.text = "Concealed";
 		descriptionText.text = "Concealed";
+
+		mouseTargetable = GetComponent<MouseTargetable>();
+		mouseTargetable.SetTargetingGroup(TargetingGroup.CardInEnemyHand);
 	}
 
 	/// Flip face up, and unconceal + setup card details if the card is currently conceal

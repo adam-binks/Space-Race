@@ -16,6 +16,7 @@ public class GameManager : Photon.MonoBehaviour {
 	public int localPlayerNum;
 	[HideInInspector]
 	public ActionQueue actionQueue;
+	[HideInInspector]
 	public TurnManager turnManager;
 
 	private Deck localDeck;
