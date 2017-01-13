@@ -11,7 +11,8 @@ public enum ActionStatus {
 
 public enum Act {
 	EndTurn,
-	RevealCard
+	RevealCard,
+	PlayCard
 }
 
 
@@ -62,6 +63,9 @@ public class Action {
 
 	/// Perform this action
 	public void Perform(GameManager gm) {
+		Card c;
+		CardSlot cs;
+
 		switch ((Act)actionID) {
 
 			case Act.EndTurn:
@@ -70,9 +74,19 @@ public class Action {
 				break;
 			
 			case Act.RevealCard:
-				Card c = ActionActor.GetCardByID(actorID);
+				c = ActionActor.GetCardByID(actorID);
 				c.Reveal(new CardID(parameter));
+				status = ActionStatus.Acted;
 				break;
+			
+			case Act.PlayCard:
+				c = ActionActor.GetCardByID(actorID);
+				cs = ActionActor.GetCardSlotByID(targetID);
+				c.AddToCardSlot(cs);
+				status = ActionStatus.Acted;
+				break;
+
+				// don't forget ActionStatus.Acted!
 
 			default:
 				Debug.LogError("Invalid actionID " + actionID);
@@ -103,5 +117,13 @@ public class RevealCardAction : Action {
 		targetID = GetActorID("No actor");
 		parameter = cardID;
 		SetAction(Act.RevealCard);
+	}
+}
+
+public class PlayCardAction : Action {
+	public PlayCardAction(int cardActorID, int cardSlotActorID) {
+		actorID = cardActorID;
+		targetID = cardSlotActorID;
+		SetAction(Act.PlayCard);
 	}
 }

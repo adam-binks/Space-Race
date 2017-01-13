@@ -15,17 +15,20 @@ public class CardTemplate {   // << not a monobehaviour!
 	public int playCost;
 	public int chargeCost;
 	public cardCategory cat;
+	public CardID ID;
 
 	public CardTemplate(string cardName,
 						string description,
 						int playCost,
 						int chargeCost,
-						cardCategory category) {
+						cardCategory category,
+						CardID ID) {
 		this.cardName = cardName;
 		this.description = description;
 		this.playCost = playCost;
 		this.chargeCost = chargeCost;
 		this.cat = category;
+		this.ID = ID;
 	}
 
 	// These methods may be overriden by card templates
@@ -43,12 +46,11 @@ public class CardTemplate {   // << not a monobehaviour!
 
 public class ScienceFunding : CardTemplate {
 	public ScienceFunding() 
-	: base("Science Funding", "Players draw two cards at the start of each turn", 1, 2, cardCategory.Policy)
-	{
-	}
+	: base("Science Funding", "Players draw two cards at the start of each turn", 1, 2, 
+			cardCategory.Policy, new CardID("ScienceFunding")) { }
 
 	public override bool OnTurnStart(GameManager gm) {
-		// TODO: draw an extra card
+		// TODO: if charged, draw an extra card
 		// gm.addAction(new Action(actionType.drawCard));
 		return true;
 	}

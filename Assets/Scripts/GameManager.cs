@@ -54,14 +54,15 @@ public class GameManager : Photon.MonoBehaviour {
 	public Card CreateCardGO(CardID ID) {
 		GameObject GO = Instantiate(cardPrefab);
 		Card c = GO.GetComponent<Card>();
-		c.Setup(ID);
+
+		c.Setup(ID, this);
 		return c;
 	}
 
 	public Card CreateConcealedCardGO() {
 		GameObject GO = Instantiate(cardPrefab);
 		Card c = GO.GetComponent<Card>();
-		c.ConcealedSetup();
+		c.ConcealedSetup(this);
 		return c;
 	}
 

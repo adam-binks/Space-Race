@@ -7,7 +7,8 @@ public enum TargetingGroup {
 	NOT_ASSIGNED,
 	CardInMyHand,
 	CardInEnemyHand,
-	HeldCard,
+	CardOnBoard,
+	DraggedObject,
 	EmptyPolicySlot,
 	FullPolicySlot,
 	EmptyOperativeSlot,
@@ -98,7 +99,11 @@ public class MouseTargetable : MonoBehaviour {
 		targetingGroup = newTG;
 	}
 
-	bool TargetingGroupIsActive() {
+	public TargetingGroup GetTargetingGroup() {
+		return targetingGroup;
+	}
+
+	public bool TargetingGroupIsActive() {
 		return activeTargetingGroups.Contains(targetingGroup);
 	}
 
