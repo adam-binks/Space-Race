@@ -31,8 +31,12 @@ public class TurnManager : MonoBehaviour {
 		DrawCards();
 	}
 
+	/// Refill the current funds of the current player to their max funds
 	void RefillFunds() {
+		PlayerFunds funds = IsMyTurn() ? gm.myFunds : gm.enemyFunds;
 
+		funds.increaseMaxFunds();
+		funds.refillFunds();
 	}
 
 	void DrawCards() {
@@ -48,6 +52,7 @@ public class TurnManager : MonoBehaviour {
 		gm.actionQueue.AddAction(new EndTurnAction());
 	}
 
+	/// Called by EndTurnAction
 	public void EndTurn() {
 		gm.actionQueue.EndTurn();
 		turnCount++;

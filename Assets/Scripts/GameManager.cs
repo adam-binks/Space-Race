@@ -4,7 +4,6 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(PhotonView))]
-
 public class GameManager : Photon.MonoBehaviour {
 
 	public int numPolicySlots = 5;
@@ -18,6 +17,8 @@ public class GameManager : Photon.MonoBehaviour {
 	public ActionQueue actionQueue;
 	[HideInInspector]
 	public TurnManager turnManager;
+	public PlayerFunds myFunds;
+	public PlayerFunds enemyFunds;
 
 	private Deck localDeck;
 	private DeckDisplay deckDisplay;
