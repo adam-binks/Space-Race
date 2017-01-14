@@ -37,6 +37,12 @@ public class Hand : MonoBehaviour {
 		c.hand = null;
 	}
 
+	public void UpdateAllCardsTargetingGroupsForPlayability() {
+		foreach (Card c in cards) {
+			c.UpdateTargetingGroupForPlayability();
+		}
+	}
+
 	Vector2 GetCardPosInHand(int index) {
 		return new Vector2( -0.5f * cards.Count * spacing  +  spacing * index , 0);
 	}

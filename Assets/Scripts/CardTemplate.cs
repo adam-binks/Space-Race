@@ -46,7 +46,7 @@ public class CardTemplate {   // << not a monobehaviour!
 
 public class ScienceFunding : CardTemplate {
 	public ScienceFunding() 
-	: base("Science Funding", "Players draw two cards at the start of each turn", 1, 2, 
+	: base("Science Funding", "Players draw two cards at the start of each turn", 3, 2, 
 			cardCategory.Policy, new CardID("ScienceFunding")) { }
 
 	public override bool OnTurnStart(GameManager gm) {

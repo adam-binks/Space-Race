@@ -5,7 +5,8 @@ using UnityEngine;
 
 public enum TargetingGroup {
 	NOT_ASSIGNED,
-	CardInMyHand,
+	CardInMyHandPlayable,
+	CardInMyHandUnplayable,
 	CardInEnemyHand,
 	CardOnBoard,
 	DraggedObject,

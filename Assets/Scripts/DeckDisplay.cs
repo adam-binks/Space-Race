@@ -40,7 +40,7 @@ public class DeckDisplay : MonoBehaviour {
 			return null;
 		}
 
-		Card c = gm.CreateCardGO(ID);
+		Card c = gm.CreateCardGO(ID, gm.localPlayerNum);
 		// position it on the local deck
 		c.transform.position = myDeck.transform.position;
 		// start upside down then tween face up

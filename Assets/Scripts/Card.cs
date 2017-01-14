@@ -10,6 +10,7 @@ public class Card : ActionActor {
 
 	public Text titleText;
 	public Text descriptionText;
+	public Text costText;
 	[HeaderAttribute("Juice")]
 	public float flipDuration = 0.1f;
 	public float cardSlotDropLaxness = 0.2f; // when the card is dropped, look for cardSlots in a sphere of this radius
@@ -22,31 +23,32 @@ public class Card : ActionActor {
 	private MouseTargetable mouseTargetable;
 	private MouseDraggable mouseDraggable;
 	private GameManager gm;
+	private int playerNumWhoPlayedThis;
 
 
-	public void Setup(CardID ID, GameManager gm) {
+	public void Setup(CardID ID, GameManager gm, int playerNumWhoPlayedThis) {
+		this.gm = gm;
+		this.playerNumWhoPlayedThis = playerNumWhoPlayedThis;
+
 		template = ID.GetTemplate();
 
 		// setup visuals
 		titleText.text = template.cardName;
 		descriptionText.text = template.description;
+		costText.text = template.playCost.ToString();
 
 		isConcealed = false;
 
 		mouseTargetable = GetComponent<MouseTargetable>();
-		mouseTargetable.SetTargetingGroup(TargetingGroup.CardInMyHand);
-
 		mouseDraggable = GetComponent<MouseDraggable>();
 		mouseDraggable.OnPickUp.Add(this.OnPickUp);
 		mouseDraggable.OnDrop.Add(this.OnDrop);
 
-		this.gm = gm;
-
-		//Debug.Log("ID: " + actorID);
+		UpdateTargetingGroupForPlayability();
 	}
 
 	/// When the enemy draws a card, this client shouldn't know what it is
-	public void ConcealedSetup(GameManager gm) {
+	public void ConcealedSetup(GameManager gm, int playerNumWhoPlayedThis) {
 		isConcealed = true;
 		FlipFaceDown(false);
 
@@ -57,6 +59,7 @@ public class Card : ActionActor {
 		mouseTargetable.SetTargetingGroup(TargetingGroup.CardInEnemyHand);
 
 		this.gm = gm;
+		this.playerNumWhoPlayedThis = playerNumWhoPlayedThis;
 	}
 
 	/// Flip face up, and unconceal + setup card details if the card is currently conceal
@@ -64,7 +67,7 @@ public class Card : ActionActor {
 		// if the card is already revealed, do nothing
 		// this is for the benefit of the player who drew the card
 		if (isConcealed) {
-			Setup(ID, gm);
+			Setup(ID, gm, playerNumWhoPlayedThis);
 			FlipFaceUp(true);
 		}
 	}
@@ -119,13 +122,13 @@ public class Card : ActionActor {
 			ReturnToMyHand();
 		}
 
-		MouseTargetable.SetActiveTargetingGroup(TargetingGroup.CardInMyHand);
+		MouseTargetable.SetActiveTargetingGroup(TargetingGroup.CardInMyHandPlayable);
 	}
 
 	void ReturnToMyHand() {
 		// move this back to the hand
 		GameObject.Find("MyHand").GetComponent<Hand>().CorrectCardPositions();
-		mouseTargetable.SetTargetingGroup(TargetingGroup.CardInMyHand);
+		mouseTargetable.SetTargetingGroup(TargetingGroup.CardInMyHandPlayable);
 	}
 
 	/// Called by PlayCardAction
@@ -139,6 +142,9 @@ public class Card : ActionActor {
 		mouseTargetable.SetTargetingGroup(TargetingGroup.CardOnBoard);
 
 		hand.RemoveFromHand(this);
+
+		PlayerFunds funds = playerNumWhoPlayedThis == gm.localPlayerNum ? gm.myFunds : gm.enemyFunds;
+		funds.deductFromFunds(template.playCost);
 	}
 
 	CardSlot GetCollidedCardSlot() {
@@ -149,5 +155,35 @@ public class Card : ActionActor {
 			}
 		}
 		return null; // no collided card slot found
+	}
+
+	/// This card should only be interactable if it is currently playable (can afford + is a free slot)
+	public void UpdateTargetingGroupForPlayability() {
+		if (IsPlayable()) {
+			mouseTargetable.SetTargetingGroup(TargetingGroup.CardInMyHandPlayable);
+		} else {
+			mouseTargetable.SetTargetingGroup(TargetingGroup.CardInMyHandUnplayable);
+		}
+	}
+
+	bool IsPlayable() {
+		// check if the player can afford this card
+		if (!gm.myFunds.canAfford(template.playCost)) {
+			return false;
+		}
+		
+		// check there's a free slot
+		if (template.cat == cardCategory.Operative) {
+			if (!gm.slotManager.IsFreeOperativeSlot()) {
+				return false;
+			}
+		} else {
+			if (!gm.slotManager.IsFreePolicySlot()) {
+				return false;
+			}
+		}
+
+		// all checks passed
+		return true;
 	}
 }

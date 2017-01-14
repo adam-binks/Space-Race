@@ -12,6 +12,7 @@ public class PlayerFunds : MonoBehaviour {
 	private int maxFunds;
 	private int currentFunds;
 	private int fundsIncreasePerTurn;
+	private GameManager gm;
 
 
 	void Start() {
@@ -35,14 +36,21 @@ public class PlayerFunds : MonoBehaviour {
 
 	public void deductFromFunds(int amount) {
 		currentFunds -= amount;
-		if (currentFunds <= 0) {
+		if (currentFunds < 0) {
 			currentFunds = 0;
 			Debug.LogWarning("Amount deducted greater than remaining funds - potential problem?", this);
 		}
 		UpdateDisplay();
+
+		// some cards may now no longer be affordable - update highlights/interactibility
+		gm.myHand.UpdateAllCardsTargetingGroupsForPlayability();
 	}
 
 	void UpdateDisplay() {
 		fundsDisplay.text = "Current funds: " + currentFunds.ToString() + "/" + maxFunds.ToString();
+	}
+
+	public void SetGM(GameManager gm) {
+		this.gm = gm;
 	}
 }

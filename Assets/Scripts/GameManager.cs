@@ -9,7 +9,7 @@ public class GameManager : Photon.MonoBehaviour {
 	public int numPolicySlots = 5;
 	public int numOperativeSlots = 6;
 	public GameObject cardPrefab;
-	public Hand localHand;
+	public Hand myHand;
 	public Hand enemyHand;
 	[HideInInspector]
 	public int localPlayerNum;
@@ -17,12 +17,13 @@ public class GameManager : Photon.MonoBehaviour {
 	public ActionQueue actionQueue;
 	[HideInInspector]
 	public TurnManager turnManager;
+	[HideInInspector]
+	public SlotManager slotManager;
 	public PlayerFunds myFunds;
 	public PlayerFunds enemyFunds;
 
 	private Deck localDeck;
 	private DeckDisplay deckDisplay;
-	private SlotManager slotManager;
 
 
 	void Start() {
@@ -30,6 +31,9 @@ public class GameManager : Photon.MonoBehaviour {
 		slotManager = GetComponent<SlotManager>();
 		turnManager = GetComponent<TurnManager>();
 		actionQueue = GetComponent<ActionQueue>();
+
+		myFunds.SetGM(this);
+		enemyFunds.SetGM(this);
 	}
 
 	void OnJoinedRoom () {
@@ -48,22 +52,26 @@ public class GameManager : Photon.MonoBehaviour {
 		turnManager.StartGame(); // temp: wait until other player has joined and is ready
 	}
 
-	public int GetOtherPlayer(int p) {
+	public int GetEnemyPlayerNum() {
+		return GetOtherPlayerNum(localPlayerNum);
+	}
+
+	public int GetOtherPlayerNum(int p) {
 		return (p == 1) ? 2 : 1;
 	}
 	
-	public Card CreateCardGO(CardID ID) {
+	public Card CreateCardGO(CardID ID, int authorPlayerNum) {
 		GameObject GO = Instantiate(cardPrefab);
 		Card c = GO.GetComponent<Card>();
 
-		c.Setup(ID, this);
+		c.Setup(ID, this, authorPlayerNum);
 		return c;
 	}
 
 	public Card CreateConcealedCardGO() {
 		GameObject GO = Instantiate(cardPrefab);
 		Card c = GO.GetComponent<Card>();
-		c.ConcealedSetup(this);
+		c.ConcealedSetup(this, GetEnemyPlayerNum());
 		return c;
 	}
 
@@ -75,7 +83,7 @@ public class GameManager : Photon.MonoBehaviour {
 			return null;
 		}
 
-		localHand.AddToHand(c);
+		myHand.AddToHand(c);
 		return c;
 	}
 

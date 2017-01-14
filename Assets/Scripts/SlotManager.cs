@@ -44,7 +44,15 @@ public class SlotManager : MonoBehaviour {
 		}
 	}
 
-	bool isFreeSlot(CardSlot[] slots) {
+	public bool IsFreeOperativeSlot() {
+		return IsFreeSlot(myOperativeSlots);
+	}
+
+	public bool IsFreePolicySlot() {
+		return IsFreeSlot(policySlots);
+	}
+
+	bool IsFreeSlot(CardSlot[] slots) {
 		foreach (CardSlot s in slots) {
 			if (!s.IsOccupied()) {
 				return true;
@@ -53,7 +61,7 @@ public class SlotManager : MonoBehaviour {
 		return false;
 	}
 
-	CardSlot getFreeSlot(CardSlot[] slots) {
+	CardSlot GetFreeSlot(CardSlot[] slots) {
 		foreach(CardSlot s in slots) {
 			if (!s.IsOccupied()) {
 				return s;
