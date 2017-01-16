@@ -75,6 +75,14 @@ public class GameManager : Photon.MonoBehaviour {
 		return c;
 	}
 
+	public Card DrawPlayersCard(int playerNum) {
+		if (playerNum == localPlayerNum) {
+			return DrawMyCard();
+		} else {
+			return DrawEnemyCard();
+		}
+	}
+
 	public Card DrawMyCard() {
 		Card c = deckDisplay.DrawCard(localDeck, this);
 

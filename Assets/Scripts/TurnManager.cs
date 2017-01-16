@@ -22,14 +22,19 @@ public class TurnManager : MonoBehaviour {
 
 	void StartTurn() {
 		if (IsMyTurn()) {
-			MouseTargetable.SetActiveTargetingGroup(TargetingGroup.CardInMyHandPlayable); // make my cards in hand selectable on my turn
+			MouseTargetable.SetActiveTargetingGroups(new List<TargetingGroup> {
+				TargetingGroup.CardInMyHandPlayable,
+				TargetingGroup.CardOnBoardChargeable } ); // make my cards in my hand and the board selectable on my turn
 		} else {
 			MouseTargetable.SetActiveTargetingGroups( new List<TargetingGroup> {} ); // make nothing selectable on enemy turn
 		}
 
 		RefillFunds();
 		DrawCards();
+		gm.slotManager.OnStartTurn(IsMyTurn());
+
 		gm.myHand.UpdateAllCardsTargetingGroupsForPlayability();
+		gm.slotManager.UpdateAllCardsTargetingGroupsForChargeability();
 	}
 
 	/// Refill the current funds of the current player to their max funds

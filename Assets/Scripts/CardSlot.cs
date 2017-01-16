@@ -10,15 +10,15 @@ public class CardSlot : ActionActor {
 	bool animateIn = true;
 
 	private Card card = null;
-	private cardCategory slotType = cardCategory.None;
+	private CardCategory slotType = CardCategory.None;
 	private bool isMine;
 	private MouseTargetable mouseTargetable;
 
-	public void Setup(cardCategory requiredCardCategory, bool isMine) {
+	public void Setup(CardCategory requiredCardCategory, bool isMine) {
 		this.slotType = requiredCardCategory;
 
 		// setup slot sprite
-		if (slotType == cardCategory.Operative) {
+		if (slotType == CardCategory.Operative) {
 			GetComponentInChildren<SpriteRenderer>().sprite = operativeSlotSprite;
 		} else {
 			GetComponentInChildren<SpriteRenderer>().sprite = policySlotSprite;
@@ -38,6 +38,10 @@ public class CardSlot : ActionActor {
 	
 	public bool IsOccupied() {
 		return card != null;
+	}
+
+	public Card GetCard() {
+		return card;
 	}
 
 	public void AddCard(Card c) {
@@ -65,9 +69,9 @@ public class CardSlot : ActionActor {
 	}
 
 	TargetingGroup GetEmptyTargetingGroup() {
-		if (slotType == cardCategory.Operative) {
+		if (slotType == CardCategory.Operative) {
 			return TargetingGroup.EmptyOperativeSlot;
-		} else if (slotType == cardCategory.Policy) {
+		} else if (slotType == CardCategory.Policy) {
 			return TargetingGroup.EmptyPolicySlot;
 		} else {
 			Debug.LogError("Card slot must have type");
@@ -76,9 +80,9 @@ public class CardSlot : ActionActor {
 	}
 
 	TargetingGroup GetFullTargetingGroup() {
-		if (slotType == cardCategory.Operative) {
+		if (slotType == CardCategory.Operative) {
 			return TargetingGroup.FullOperativeSlot;
-		} else if (slotType == cardCategory.Policy) {
+		} else if (slotType == CardCategory.Policy) {
 			return TargetingGroup.FullPolicySlot;
 		} else {
 			Debug.LogError("Card slot must have type");

@@ -12,7 +12,8 @@ public enum ActionStatus {
 public enum Act {
 	EndTurn,
 	RevealCard,
-	PlayCard
+	PlayCard,
+	ChargePolicyCard
 }
 
 
@@ -85,7 +86,13 @@ public class Action {
 				c.AddToCardSlot(cs);
 				status = ActionStatus.Acted;
 				break;
-
+			
+			case Act.ChargePolicyCard:
+				c = ActionActor.GetCardByID(actorID);
+				c.ChargePolicy();
+				status = ActionStatus.Acted;
+				break;
+			
 				// don't forget ActionStatus.Acted!
 
 			default:
@@ -125,5 +132,13 @@ public class PlayCardAction : Action {
 		actorID = cardActorID;
 		targetID = cardSlotActorID;
 		SetAction(Act.PlayCard);
+	}
+}
+
+public class ChargePolicyCardAction : Action {
+	public ChargePolicyCardAction(int cardActorID) {
+		actorID = cardActorID;
+		targetID = GetActorID("No actor");
+		SetAction(Act.ChargePolicyCard);
 	}
 }

@@ -44,6 +44,7 @@ public class PlayerFunds : MonoBehaviour {
 
 		// some cards may now no longer be affordable - update highlights/interactibility
 		gm.myHand.UpdateAllCardsTargetingGroupsForPlayability();
+		gm.slotManager.UpdateAllCardsTargetingGroupsForChargeability();
 	}
 
 	void UpdateDisplay() {

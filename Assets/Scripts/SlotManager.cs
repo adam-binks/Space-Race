@@ -24,7 +24,7 @@ public class SlotManager : MonoBehaviour {
 			GameObject GO = Instantiate(cardSlotPrefab, policySlotsParent);
 			GO.transform.localPosition = new Vector3(-numPolicySlots*0.5f*policySlotSpacing + i * policySlotSpacing, 0, 0);
 			policySlots[i] = GO.GetComponent<CardSlot>();
-			policySlots[i].Setup(cardCategory.Policy, true);
+			policySlots[i].Setup(CardCategory.Policy, true);
 		}
 
 		// setup operative slots
@@ -33,14 +33,31 @@ public class SlotManager : MonoBehaviour {
 		for (int i = 0; i < numOperativeSlots; i++) {
 			// my slot
 			GameObject myGO = Instantiate(cardSlotPrefab, myOperativeSlotsParent);
-			myGO.transform.localPosition = new Vector3(-numOperativeSlots*0.5f*operativeSlotSpacing + i * operativeSlotSpacing, 0, 0);
+			myGO.transform.localPosition = new Vector3(-numOperativeSlots*0.5f*operativeSlotSpacing + i * operativeSlotSpacing, 
+													   0, 0);
 			myOperativeSlots[i] = myGO.GetComponent<CardSlot>();
-			myOperativeSlots[i].Setup(cardCategory.Operative, true);
+			myOperativeSlots[i].Setup(CardCategory.Operative, true);
 			// enemy slot
 			GameObject enemyGO = Instantiate(cardSlotPrefab, enemyOperativeSlotsParent);
-			enemyGO.transform.localPosition = new Vector3(-numOperativeSlots*0.5f*operativeSlotSpacing + i * operativeSlotSpacing, 0, 0);
+			enemyGO.transform.localPosition = new Vector3(-numOperativeSlots*0.5f*operativeSlotSpacing + i * operativeSlotSpacing,
+														  0, 0);
 			enemyOperativeSlots[i] = enemyGO.GetComponent<CardSlot>();
-			enemyOperativeSlots[i].Setup(cardCategory.Operative, false);
+			enemyOperativeSlots[i].Setup(CardCategory.Operative, false);
+		}
+	}
+
+	/// Call OnTurnStart on cards in policy slots and the current player's operative slots
+	public void OnStartTurn(bool isMyTurn) {
+		CardSlot[] operatives = isMyTurn  ?  myOperativeSlots : enemyOperativeSlots;
+		foreach (CardSlot op in operatives) {
+			if (op.IsOccupied()) {
+				op.GetCard().OnTurnStart();
+			}
+		} 
+		foreach (CardSlot pol in policySlots) {
+			if (pol.IsOccupied()) {
+				pol.GetCard().OnTurnStart();
+			}
 		}
 	}
 
@@ -70,5 +87,19 @@ public class SlotManager : MonoBehaviour {
 
 		// no free slots
 		return null;
+	}
+
+	public void UpdateAllCardsTargetingGroupsForChargeability() {
+		foreach (CardSlot policySlot in policySlots) {
+			if (policySlot.IsOccupied()) {
+				policySlot.GetCard().UpdateTargetingGroupForChargeability();
+			}
+		}
+
+		foreach (CardSlot myOperativeSlot in myOperativeSlots) {
+			if (myOperativeSlot.IsOccupied()) {
+				myOperativeSlot.GetCard().UpdateTargetingGroupForChargeability();
+			}
+		}
 	}
 }
