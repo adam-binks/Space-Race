@@ -11,7 +11,7 @@ public class CardSlot : ActionActor {
 
 	private Card card = null;
 	private CardCategory slotType = CardCategory.None;
-	private bool isMine;
+	private bool isMine; // only applies to operative cardSlots
 	private MouseTargetable mouseTargetable;
 
 	public void Setup(CardCategory requiredCardCategory, bool isMine) {
@@ -49,7 +49,7 @@ public class CardSlot : ActionActor {
 			Debug.LogError("Cannot add card to occupied card slot!");
 			return;
 		}
-		if (!CardIsValid(c)) {
+		if (!CardCategoryIsValid(c)) {
 			Debug.LogError("Cannot add card of type " + c.GetCategory() + " to this card slot", this);
 			return;
 		}
@@ -64,13 +64,17 @@ public class CardSlot : ActionActor {
 		return c;
 	}
 
-	public bool CardIsValid(Card c) {
+	public bool CardCategoryIsValid(Card c) {
 		return slotType == c.GetCategory()  &&  !IsOccupied();
+	}
+
+	public bool CanPlayCardHere(Card c) {
+		return CardCategoryIsValid(c) && (slotType == CardCategory.Policy || isMine);
 	}
 
 	TargetingGroup GetEmptyTargetingGroup() {
 		if (slotType == CardCategory.Operative) {
-			return TargetingGroup.EmptyOperativeSlot;
+			return isMine ? TargetingGroup.EmptyMyOperativeSlot : TargetingGroup.EmptyEnemyOperativeSlot;
 		} else if (slotType == CardCategory.Policy) {
 			return TargetingGroup.EmptyPolicySlot;
 		} else {
@@ -81,7 +85,7 @@ public class CardSlot : ActionActor {
 
 	TargetingGroup GetFullTargetingGroup() {
 		if (slotType == CardCategory.Operative) {
-			return TargetingGroup.FullOperativeSlot;
+			return isMine ? TargetingGroup.FullMyOperativeSlot : TargetingGroup.EmptyMyOperativeSlot;
 		} else if (slotType == CardCategory.Policy) {
 			return TargetingGroup.FullPolicySlot;
 		} else {

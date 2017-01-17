@@ -44,12 +44,18 @@ public class GameManager : Photon.MonoBehaviour {
 												 new CardID("ScienceFunding"),
 												 new CardID("ScienceFunding"),
 												 new CardID("ScienceFunding"),
-												 new CardID("ScienceFunding")});
+												 new CardID("ScienceFunding"),
+												 new CardID("InvestigativeJournalist"),
+												 new CardID("InvestigativeJournalist"),
+												 new CardID("InvestigativeJournalist"),
+												 new CardID("InvestigativeJournalist"),
+												 new CardID("InvestigativeJournalist")});
+		localDeck.Shuffle();
 		
 		deckDisplay.UpdateRemaining(localDeck.GetCount(), true);
 		slotManager.SetupSlots(numPolicySlots, numOperativeSlots);
 
-		turnManager.StartGame(); // temp: wait until other player has joined and is ready
+		turnManager.StartGame(); // todo: wait until other player has joined and is ready
 	}
 
 	public int GetEnemyPlayerNum() {

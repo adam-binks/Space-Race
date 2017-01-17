@@ -8,7 +8,8 @@ public class CardID {
 	private string ID;
 	// TODO: download? may create more problems than it solves..
 	private string[] acceptableIDs = {
-		"ScienceFunding"
+		"ScienceFunding",
+		"InvestigativeJournalist"
 	};
 
 	public CardID(string ID) {
@@ -23,6 +24,9 @@ public class CardID {
 		switch (ID) {
 			case "ScienceFunding":
 				return new ScienceFunding();
+			case "InvestigativeJournalist":
+				return new InvestigativeJournalist();
+				
 			default:
 				Debug.LogError("Invalid ID " + ID);
 				return null;

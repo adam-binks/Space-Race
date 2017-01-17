@@ -13,8 +13,10 @@ public enum TargetingGroup {
 	DraggedObject,
 	EmptyPolicySlot,
 	FullPolicySlot,
-	EmptyOperativeSlot,
-	FullOperativeSlot
+	EmptyMyOperativeSlot,
+	FullMyOperativeSlot,
+	EmptyEnemyOperativeSlot,
+	FullEnemyOperativeSlot
 }
 
 

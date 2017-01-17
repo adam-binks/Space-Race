@@ -32,6 +32,7 @@ public class Card : ActionActor {
 	private GameManager gm;
 	private CardStatus status = CardStatus.InHand;
 	private int tempPlayerNum;
+	private SortingLayerManager sortingLayerManager;
 
 
 	public void Setup(CardID ID, GameManager gm, int playerNumWhoPlayedThis) {
@@ -63,6 +64,10 @@ public class Card : ActionActor {
 		} else {
 			chargeableInterface.SetActive(false);
 		}
+
+		sortingLayerManager = GetComponent<SortingLayerManager>();
+		sortingLayerManager.Setup();
+		sortingLayerManager.SetSortingLayer("CardInHand");
 	}
 
 	/// When the enemy draws a card, this client shouldn't know what it is
@@ -122,7 +127,7 @@ public class Card : ActionActor {
 		// make valid card slots targetable
 		TargetingGroup emptyTG = TargetingGroup.NOT_ASSIGNED;
 		if (template.cat == CardCategory.Operative) {
-			emptyTG = TargetingGroup.EmptyOperativeSlot;
+			emptyTG = TargetingGroup.EmptyMyOperativeSlot;
 		} else if (template.cat == CardCategory.Policy) {
 			emptyTG = TargetingGroup.EmptyPolicySlot;
 		}
@@ -131,11 +136,13 @@ public class Card : ActionActor {
 			TargetingGroup.DraggedObject,
 			emptyTG
 		});
+
+		sortingLayerManager.SetSortingLayer("DraggedCard");
 	}
 
 	void OnDrop() {
 		CardSlot cardSlot = GetCollidedCardSlot();
-		if (cardSlot != null && cardSlot.CardIsValid(this)) {
+		if (cardSlot != null && cardSlot.CanPlayCardHere(this)) {
 			// reveal this card to both players, then play it to the board
 			gm.actionQueue.AddAction(new RevealCardAction(this.actorID, template.ID.GetID()));
 			gm.actionQueue.AddAction(new PlayCardAction(this.actorID, cardSlot.actorID));
@@ -154,6 +161,7 @@ public class Card : ActionActor {
 		gm.myHand.CorrectCardPositions();
 		mouseTargetable.SetTargetingGroup(TargetingGroup.CardInMyHandPlayable);
 		status = CardStatus.InHand;
+		sortingLayerManager.SetSortingLayer("CardInHand");
 	}
 
 	/// Called by PlayCardAction
@@ -171,6 +179,8 @@ public class Card : ActionActor {
 
 		UpdateTargetingGroupForChargeability();
 		mouseDraggable.isDraggable = false; // disable dragging
+
+		sortingLayerManager.SetSortingLayer("CardInCardSlot");
 	}
 
 	CardSlot GetCollidedCardSlot() {
@@ -218,6 +228,7 @@ public class Card : ActionActor {
 		return true;
 	}
 
+	/// Only for cards in my operative slots
 	public void UpdateTargetingGroupForChargeability() {
 		if (IsChargeable()) {
 			mouseTargetable.SetTargetingGroup(TargetingGroup.CardOnBoardChargeable);
@@ -266,21 +277,9 @@ public class Card : ActionActor {
 		if (template.cat == CardCategory.Policy) {
 			gm.actionQueue.AddAction(new ChargePolicyCardAction(this.actorID));
 		} else {
-			// TODO operative charging
+			gm.actionQueue.AddAction(new ChargeOperativeCardUntargetedAction(this.actorID));
+			// TODO targeted action
 		}
-	}
-
-	/// Called by ChargePolicyCardAction
-	public void ChargePolicy() {
-		if (status == CardStatus.InHand) {
-			Debug.LogError("Cannot charge a card in hand!", this);
-			return;
-		}
-
-		SetIsCharged(true);
-
-		PlayerFunds funds = (template.authorPlayer == gm.localPlayerNum) ? gm.myFunds : gm.enemyFunds;
-		funds.deductFromFunds(template.chargeCost);
 	}
 
 	void SetIsCharged(bool newIsCharged) {
@@ -293,5 +292,27 @@ public class Card : ActionActor {
 		if (status == CardStatus.OnBoard) {
 			UpdateTargetingGroupForChargeability();
 		}
+	}
+	
+	/// Called by ChargePolicyCardAction
+	public void ChargePolicy() {
+		ChargeUntargeted();
+	}
+
+	/// Called by ChargeOperativeUntargetedAction
+	public void ChargeOperativeUntargeted() {
+		ChargeUntargeted();
+	}
+
+	void ChargeUntargeted() {
+		if (status == CardStatus.InHand) {
+			Debug.LogError("Cannot charge a card in hand!", this);
+			return;
+		}
+
+		SetIsCharged(true);
+
+		PlayerFunds funds = (template.authorPlayer == gm.localPlayerNum) ? gm.myFunds : gm.enemyFunds;
+		funds.deductFromFunds(template.chargeCost);
 	}
 }

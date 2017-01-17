@@ -61,3 +61,9 @@ public class ScienceFunding : CardTemplate {
 		return true;
 	}
 }
+
+public class InvestigativeJournalist : CardTemplate {
+	public InvestigativeJournalist()
+	: base("Investigative Journalist", "Description tbc", 1, true, 2,
+			CardCategory.Operative, new CardID("InvestigativeJournalist")) {}
+}

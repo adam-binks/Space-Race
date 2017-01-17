@@ -13,7 +13,8 @@ public enum Act {
 	EndTurn,
 	RevealCard,
 	PlayCard,
-	ChargePolicyCard
+	ChargePolicyCard,
+	ChargeOperativeCard
 }
 
 
@@ -93,6 +94,12 @@ public class Action {
 				status = ActionStatus.Acted;
 				break;
 			
+			case Act.ChargeOperativeCard:
+				c = ActionActor.GetCardByID(actorID);
+				c.ChargeOperativeUntargeted();
+				status = ActionStatus.Acted;
+				break;
+
 				// don't forget ActionStatus.Acted!
 
 			default:
@@ -140,5 +147,13 @@ public class ChargePolicyCardAction : Action {
 		actorID = cardActorID;
 		targetID = GetActorID("No actor");
 		SetAction(Act.ChargePolicyCard);
+	}
+}
+
+public class ChargeOperativeCardUntargetedAction : Action {
+	public ChargeOperativeCardUntargetedAction(int cardActorID) {
+		actorID = cardActorID;
+		targetID = GetActorID("No actor");
+		SetAction(Act.ChargeOperativeCard);
 	}
 }
